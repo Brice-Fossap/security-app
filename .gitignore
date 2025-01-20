@@ -32,5 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
+### application.yaml ##
+**/application.yaml
+
 ### application-local.yaml ##
 **/application-local.yaml

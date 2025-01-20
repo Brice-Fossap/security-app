@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -23,9 +25,20 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsService userDetailsService;
 
+    // Liste des endpoints à exclure
+    private static final List<String> EXCLUDED_PATHS = List.of("/login", "/reset-password", "/forgot-password");
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+
+        // Vérifier si le chemin fait partie des exclus
+        if (EXCLUDED_PATHS.contains(path)) {
+            filterChain.doFilter(request, response); // Passer au filtre suivant sans traitement
+            return;
+        }
+
         final String tokenHeader = request.getHeader("Authorization");
 
         if (isBearerToken(tokenHeader)) {

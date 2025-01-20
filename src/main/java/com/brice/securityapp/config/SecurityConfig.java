@@ -56,6 +56,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/users").hasRole("ADMINISTRATOR")
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/forgot-password").permitAll()
+                        .requestMatchers("/reset-password").permitAll()
                         .requestMatchers("/persons/**").hasAnyRole("USER", "ADMINISTRATOR")
                         .anyRequest().authenticated()
                 )

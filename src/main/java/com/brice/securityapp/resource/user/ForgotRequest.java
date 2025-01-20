@@ -3,11 +3,9 @@ package com.brice.securityapp.resource.user;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
-public record LoginUserRequest(
+public record ForgotRequest(
         @NotNull
         @Email
-        String email,
-        @NotNull
-        String password
+        String email
 ) {
 }
